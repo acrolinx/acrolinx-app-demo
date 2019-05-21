@@ -1,10 +1,10 @@
+import * as _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactWordcloud from 'react-wordcloud';
-import * as _ from 'lodash';
-import './index.css';
-import {AcrolinxSidebarAddon, ExtractedTextEvent, initAcrolinxSidebarAddon} from './acrolinx-sidebar-addon-sdk';
+import {createAcrolinxApp, ExtractedTextEvent} from './acrolinx-sidebar-addon-sdk';
 import {DUMMY_TEXT} from './dummy-data';
+import './index.css';
 import {STOP_WORDS_EN} from './stop-words';
 
 interface AppComponentProps {
@@ -25,13 +25,17 @@ function AppComponent({text}: AppComponentProps) {
   return <ReactWordcloud words={wordsWithFrequency}/>
 }
 
-const addon: AcrolinxSidebarAddon = {
+
+const acrolinxSidebarApp = createAcrolinxApp({
+  button:  {
+    text: 'GENERATE WORD-CLOUD',
+    tooltip: 'Generate a word cloud of your document content'
+  },
+
   onTextExtracted(event: ExtractedTextEvent) {
     ReactDOM.render(<AppComponent text={event.text}/>, document.getElementById('root'));
   },
-};
-
-initAcrolinxSidebarAddon(addon);
+});
 
 const useDummyData = window.location.href.includes('usedummydata');
-addon.onTextExtracted({text: useDummyData ? DUMMY_TEXT : ''});
+acrolinxSidebarApp.onTextExtracted({text: useDummyData ? DUMMY_TEXT : ''});
