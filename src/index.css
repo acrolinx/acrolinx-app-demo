@@ -1,0 +1,22 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Roboto, Helvetica, Arial, Sans-Serif;
+  font-size: 16px;
+}
+
+#root,
+#root > div {
+  height: 100%;
+}
+
+svg {
+  transform: scale(1.5);
+}
+
+.message {
+  padding-top: 10px;
+  text-align: center;
+}
