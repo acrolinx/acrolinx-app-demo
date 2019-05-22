@@ -2,8 +2,13 @@ export interface ExtractedTextEvent {
   text: string;
 }
 
+export interface ExtractedTextLinkEvent {
+  url: string;
+}
+
 export interface AcrolinxSidebarApp {
   button?: AddonButtonConfig;
+  onTextExtractedLink?(event: ExtractedTextLinkEvent): void;
   onTextExtracted?(event: ExtractedTextEvent): void;
 }
 
@@ -25,16 +30,22 @@ interface SidebarAddonConfig {
 export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
     button: app.button,
-    reportTypes: app.onTextExtracted ? [ReportType.extractedText4App] : []
+    reportTypes: (app.onTextExtracted || app.onTextExtractedLink) ? [ReportType.extractedText4App] : []
   });
 
   window.addEventListener('message', event => {
-    console.log('Got message', event);
+    console.log('Got message from sidebar', event);
     if (event.data && event.data.command === 'updateData') {
+      if (app.onTextExtractedLink) {
+        app.onTextExtractedLink({url: event.data.data.links.extractedContent});
+      }
+
       if (app.onTextExtracted) {
-        fetch(event.data.data.links.extractedContent).then(r => r.text()).then(text => {
-          app.onTextExtracted!({text: text})
-        })
+        fetch(event.data.data.links.extractedContent)
+          .then(r => r.text())
+          .then(text => {
+            app.onTextExtracted!({text: text})
+          });
       }
     }
   }, false);
