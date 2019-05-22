@@ -12,6 +12,10 @@ interface AppComponentProps {
 }
 
 function AppComponent({text}: AppComponentProps) {
+  if (_.isEmpty(text)) {
+    return <div className="message">{'Welcome to Word Cloud'}</div>
+  }
+
   const wordsWithFrequency = _.chain(text.toLowerCase().split(/\W+/))
     .filter(word => word.length > 1 && !STOP_WORDS_EN.has(word))
     .countBy()
@@ -19,7 +23,7 @@ function AppComponent({text}: AppComponentProps) {
     .value();
 
   if (_.isEmpty(wordsWithFrequency)) {
-    return <div className="message">{'Please check some text with non-stop-words to view it\'s word cloud.'}</div>
+    return <div className="message">{'Your document should contain some non-stop-words.'}</div>
   }
 
   return <ReactWordcloud words={wordsWithFrequency}/>

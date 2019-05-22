@@ -13,10 +13,10 @@ html, body {
 }
 
 svg {
-  transform: scale(1.5);
+  transform: scale(1.4);
 }
 
 .message {
-  padding-top: 10px;
+  padding: 10px;
   text-align: center;
 }
