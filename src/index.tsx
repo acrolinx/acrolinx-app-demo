@@ -30,7 +30,7 @@ const acrolinxSidebarApp = createAcrolinxApp({
   title: 'WordCloud',
 
   button:  {
-    text: 'GENERATE WORD-CLOUD',
+    text: 'Generate Word Cloud',
     tooltip: 'Generate a word cloud of your document content'
   },
 
