@@ -18,37 +18,48 @@ export interface AddonButtonConfig {
   tooltip?: string;
 }
 
-export enum ReportType {
+enum ReportType {
   extractedText4App = 'extractedText4App'
 }
 
 interface SidebarAddonConfig {
   title: string;
   button?: AddonButtonConfig;
-  reportTypes: readonly ReportType[];
+  requiredReportLinks: readonly ReportType[];
+  requiredReportContent: readonly ReportType[];
 }
 
+export type ReportsForAddon = {
+  [P in ReportType]?: ReportForAddon;
+};
+
+interface ReportForAddon {
+  url?: string;
+  content?: string;
+}
 
 export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
     title: app.title,
     button: app.button,
-    reportTypes: (app.onTextExtracted || app.onTextExtractedLink) ? [ReportType.extractedText4App] : []
+    requiredReportLinks: (app.onTextExtractedLink) ? [ReportType.extractedText4App] : [],
+    requiredReportContent: (app.onTextExtracted) ? [ReportType.extractedText4App] : []
   });
 
   window.addEventListener('message', event => {
     console.log('Got message from sidebar', event);
-    if (event.data && event.data.command === 'updateData') {
-      if (app.onTextExtractedLink) {
-        app.onTextExtractedLink({url: event.data.data.links.extractedContent});
+    if (event.data && event.data.type === 'analysisResult') {
+      // TODO: Error handling if analysisResult is not like expected.
+
+      const reports: ReportsForAddon = event.data.reports;
+      const textExtractedReport = reports[ReportType.extractedText4App] || {};
+
+      if (app.onTextExtractedLink && textExtractedReport.url) {
+        app.onTextExtractedLink({url: textExtractedReport.url});
       }
 
-      if (app.onTextExtracted) {
-        fetch(event.data.data.links.extractedContent)
-          .then(r => r.text())
-          .then(text => {
-            app.onTextExtracted!({text: text})
-          });
+      if (app.onTextExtracted && textExtractedReport.content) {
+        app.onTextExtracted({text: textExtractedReport.content});
       }
     }
   }, false);
