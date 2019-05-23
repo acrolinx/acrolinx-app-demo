@@ -58,7 +58,7 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
         app.onTextExtractedLink({url: textExtractedReport.url});
       }
 
-      if (app.onTextExtracted && textExtractedReport.content) {
+      if (app.onTextExtracted && typeof textExtractedReport.content === 'string') {
         app.onTextExtracted({text: textExtractedReport.content});
       }
     }
