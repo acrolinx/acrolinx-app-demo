@@ -33,7 +33,7 @@ function AppComponent({text}: AppComponentProps) {
 const acrolinxSidebarApp = createAcrolinxApp({
   title: 'WordCloud',
 
-  button:  {
+  button: {
     text: 'Generate Word Cloud',
     tooltip: 'Generate a word cloud of your document content'
   },
@@ -43,5 +43,5 @@ const acrolinxSidebarApp = createAcrolinxApp({
   },
 });
 
-const useDummyData = window.location.href.includes('usedummydata');
+const useDummyData = _.includes(window.location.href, 'usedummydata');
 acrolinxSidebarApp.onTextExtracted({text: useDummyData ? DUMMY_TEXT : ''});
