@@ -5,23 +5,25 @@ import ReactWordcloud from 'react-wordcloud';
 import {createAcrolinxApp, ExtractedTextEvent} from './acrolinx-sidebar-addon-sdk';
 import {DUMMY_TEXT} from './dummy-data';
 import './index.css';
-import {STOP_WORDS_EN} from './stop-words';
+import {STOPWORDS_BY_LANGUAGE} from './stop-words';
 
 interface AppComponentProps {
-  text: string;
+  acrolinxAnalysisResult: ExtractedTextEvent;
 }
 
-function AppComponent({text}: AppComponentProps) {
-  if (_.isEmpty(text)) {
+function AppComponent({acrolinxAnalysisResult}: AppComponentProps) {
+  if (_.isEmpty(acrolinxAnalysisResult.text)) {
     return <div className="message">{'Welcome to Word Cloud'}</div>
   }
 
-  const wordsWithFrequency = _.chain(text.toLowerCase().split(/\W+/))
-    .filter(word => word.length > 1 && !STOP_WORDS_EN.has(word))
+  const stopWords = STOPWORDS_BY_LANGUAGE[acrolinxAnalysisResult.languageId] || new Set();
+
+  const wordsWithFrequency = _.chain(acrolinxAnalysisResult.text.toLowerCase().split(/\W+/))
+    .filter(word => word.length > 1 && !stopWords.has(word))
     .countBy()
     .map((freq, text) => ({text, value: freq}))
     .value();
-
+ 
   if (_.isEmpty(wordsWithFrequency)) {
     return <div className="message">{'Your document should contain some non-stop-words.'}</div>
   }
@@ -39,9 +41,15 @@ const acrolinxSidebarApp = createAcrolinxApp({
   },
 
   onTextExtracted(event: ExtractedTextEvent) {
-    ReactDOM.render(<AppComponent text={event.text}/>, document.getElementById('root'));
+    ReactDOM.render(
+      <AppComponent acrolinxAnalysisResult={event}/>,
+      document.getElementById('root')
+    );
   },
 });
 
 const useDummyData = _.includes(window.location.href, 'usedummydata');
-acrolinxSidebarApp.onTextExtracted({text: useDummyData ? DUMMY_TEXT : ''});
+acrolinxSidebarApp.onTextExtracted({
+  text: useDummyData ? DUMMY_TEXT : '',
+  languageId: 'en'
+});

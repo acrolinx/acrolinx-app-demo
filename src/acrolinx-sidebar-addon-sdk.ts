@@ -1,8 +1,10 @@
 export interface ExtractedTextEvent {
+  languageId: string;
   text: string;
 }
 
 export interface ExtractedTextLinkEvent {
+  languageId: string;
   url: string;
 }
 
@@ -38,6 +40,12 @@ interface ReportForAddon {
   content?: string;
 }
 
+interface AnalysisResult {
+  type: 'analysisResult';
+  languageId: string;
+  reports: ReportsForAddon;
+}
+
 export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
   configureAddon({
     title: app.title,
@@ -51,15 +59,16 @@ export function createAcrolinxApp<T extends AcrolinxSidebarApp>(app: T): T {
     if (event.data && event.data.type === 'analysisResult') {
       // TODO: Error handling if analysisResult is not like expected.
 
-      const reports: ReportsForAddon = event.data.reports;
+      const analysisResult: AnalysisResult = event.data;
+      const reports = analysisResult.reports;
       const textExtractedReport = reports[ReportType.extractedText4App] || {};
 
       if (app.onTextExtractedLink && textExtractedReport.url) {
-        app.onTextExtractedLink({url: textExtractedReport.url});
+        app.onTextExtractedLink({url: textExtractedReport.url, languageId: analysisResult.languageId});
       }
 
       if (app.onTextExtracted && typeof textExtractedReport.content === 'string') {
-        app.onTextExtracted({text: textExtractedReport.content});
+        app.onTextExtracted({text: textExtractedReport.content, languageId: analysisResult.languageId});
       }
     }
   }, false);
