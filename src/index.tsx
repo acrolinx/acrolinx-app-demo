@@ -23,7 +23,7 @@ function AppComponent({acrolinxAnalysisResult}: AppComponentProps) {
     .countBy()
     .map((freq, text) => ({text, value: freq}))
     .value();
- 
+
   if (_.isEmpty(wordsWithFrequency)) {
     return <div className="message">{'Your document should contain some non-stop-words.'}</div>
   }
@@ -33,6 +33,7 @@ function AppComponent({acrolinxAnalysisResult}: AppComponentProps) {
 
 
 const acrolinxSidebarApp = createAcrolinxApp({
+  appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiV29yZENsb3VkIiwiaWQiOiI2NjZmNzc4OS0zNTliLTRlNzMtYjlkMi00YTFmMWNkNDlmNDkiLCJ0eXBlIjoiQVBQIiwiaWF0IjoxNTYxNjQ1NDYyfQ.zQs7rXYkvLVzkMAyhQsHTpr1q1O_F4XPB_N7QfBbasE',
   title: 'WordCloud',
 
   button: {
