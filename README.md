@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm run startHttps` 
+### `npm run startHttps` on Linux
 
 Runs the app in the development mode.<br>
 Open [https://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -23,7 +23,7 @@ Open [https://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-See https://facebook.github.io/create-react-app/docs/using-https-in-development
+Windows users should read: https://facebook.github.io/create-react-app/docs/using-https-in-development
 
 ### `npm test`
 
