@@ -1,6 +1,10 @@
 # Word Cloud - Acrolinx App Demo
 This Acrolinx app demonstrates how to implement a simple word-cloud app in the Acrolinx Sidebar.
-It uses the [Acrolinx App SDK](https://github.com/acrolinx/app-sdk-js).
+
+Demonstrated Features:
+ * Extract text from document
+ 
+This app uses the [Acrolinx App SDK](https://github.com/acrolinx/app-sdk-js).
 
 
 ## Available Scripts
