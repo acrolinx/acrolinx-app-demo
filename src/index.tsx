@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactWordcloud from 'react-wordcloud';
-import {createAcrolinxApp, ExtractedTextEvent} from './acrolinx-sidebar-addon-sdk';
+import {initApi, ExtractedTextEvent, ApiEvents} from '@acrolinx/app-sdk';
 import {DUMMY_TEXT} from './dummy-data';
 import './index.css';
 import {STOPWORDS_BY_LANGUAGE} from './stop-words';
@@ -31,8 +31,13 @@ function AppComponent({acrolinxAnalysisResult}: AppComponentProps) {
   return <ReactWordcloud words={wordsWithFrequency}/>
 }
 
+function renderApp(extractedTextEvent: ExtractedTextEvent) {
+  ReactDOM.render(
+    <AppComponent acrolinxAnalysisResult={extractedTextEvent}/>, document.getElementById('root')
+  );
+}
 
-const acrolinxSidebarApp = createAcrolinxApp({
+const acrolinxAppApi = initApi({
   appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiV29yZENsb3VkIiwiaWQiOiI2NjZmNzc4OS0zNTliLTRlNzMtYjlkMi00YTFmMWNkNDlmNDkiLCJ0eXBlIjoiQVBQIiwiaWF0IjoxNTYxNjQ1NDYyfQ.zQs7rXYkvLVzkMAyhQsHTpr1q1O_F4XPB_N7QfBbasE',
   title: 'WordCloud',
 
@@ -41,16 +46,14 @@ const acrolinxSidebarApp = createAcrolinxApp({
     tooltip: 'Generate a word cloud of your document content'
   },
 
-  onTextExtracted(event: ExtractedTextEvent) {
-    ReactDOM.render(
-      <AppComponent acrolinxAnalysisResult={event}/>,
-      document.getElementById('root')
-    );
-  },
+  requiredEvents: [ApiEvents.textExtracted],
+  requiredCommands: []
 });
 
+acrolinxAppApi.events.textExtracted.addEventListener(renderApp);
+
 const useDummyData = _.includes(window.location.href, 'usedummydata');
-acrolinxSidebarApp.onTextExtracted({
+renderApp({
   text: useDummyData ? DUMMY_TEXT : '',
   languageId: 'en'
 });
