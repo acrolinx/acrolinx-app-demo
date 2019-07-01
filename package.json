@@ -1,5 +1,8 @@
 {
-  "name": "wordcloud-sidebar-addon",
+  "name": "wordcloud-acrolinx-app-demo",
+  "license": "Apache-2.0",
+  "author": "Acrolinx",
+  "url": "https://www.acrolinx.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
