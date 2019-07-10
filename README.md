@@ -6,6 +6,11 @@ Demonstrated Features:
  
 This app uses the [Acrolinx App SDK](https://github.com/acrolinx/app-sdk-js).
 
+## Install dependencies using npm
+
+```bash
+npm install
+```
 
 ## Available Scripts
 
