@@ -18,10 +18,12 @@ import * as _ from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactWordcloud from 'react-wordcloud';
-import {initApi, ExtractedTextEvent, ApiEvents} from '@acrolinx/app-sdk';
+import {initApi, ExtractedTextEvent, RequiredEvents} from '@acrolinx/app-sdk';
 import {DUMMY_TEXT} from './dummy-data';
 import './index.css';
 import {STOPWORDS_BY_LANGUAGE} from './stop-words';
+import packageJson from '../package.json';
+
 
 interface AppComponentProps {
   acrolinxAnalysisResult: ExtractedTextEvent;
@@ -56,13 +58,14 @@ function renderApp(extractedTextEvent: ExtractedTextEvent) {
 const acrolinxAppApi = initApi({
   appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiV29yZENsb3VkIiwiaWQiOiI2NjZmNzc4OS0zNTliLTRlNzMtYjlkMi00YTFmMWNkNDlmNDkiLCJ0eXBlIjoiQVBQIiwiaWF0IjoxNTYxNjQ1NDYyfQ.zQs7rXYkvLVzkMAyhQsHTpr1q1O_F4XPB_N7QfBbasE',
   title: 'WordCloud',
+  version: packageJson.version,
 
   button: {
     text: 'Generate Word Cloud',
     tooltip: 'Generate a word cloud of your document content'
   },
 
-  requiredEvents: [ApiEvents.textExtracted],
+  requiredEvents: [RequiredEvents.textExtracted],
   requiredCommands: []
 });
 

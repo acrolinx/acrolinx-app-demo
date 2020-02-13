@@ -3,10 +3,10 @@
   "license": "Apache-2.0",
   "author": "Acrolinx",
   "url": "https://www.acrolinx.com",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "@acrolinx/app-sdk": "latest",
+    "@acrolinx/app-sdk": "^0.1.1",
     "@types/jest": "24.0.18",
     "@types/lodash": "^4.14.137",
     "@types/node": "12.7.2",
@@ -15,7 +15,7 @@
     "lodash": "^4.17.15",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1",
+    "react-scripts": "^3.3.1",
     "react-wordcloud": "^1.0.8",
     "typescript": "3.5.3"
   },
