@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *' # Everyday at 2:00AM
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.JS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      - name: Build And Run Tests
+        run: |
+          npm ci
+          npm run build
+          npm run test
