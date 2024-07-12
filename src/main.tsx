@@ -13,61 +13,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import 'react-app-polyfill/ie11';
-import 'react-app-polyfill/stable';
-import * as _ from 'lodash';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ReactWordcloud from 'react-wordcloud';
-import {initApi, ExtractedTextEvent, RequiredEvents} from '@acrolinx/app-sdk';
-import {DUMMY_TEXT} from './dummy-data';
-import './index.css';
-import {STOPWORDS_BY_LANGUAGE} from './stop-words';
-import packageJson from '../package.json';
 
+import * as _ from 'lodash';
+import ReactDOM from 'react-dom';
+import ReactWordcloud from 'react-wordcloud-fork';
+import { initApi, ExtractedTextEvent, RequiredEvents } from '@acrolinx/app-sdk';
+import { DUMMY_TEXT } from './dummy-data';
+import './index.css';
+import { STOPWORDS_BY_LANGUAGE } from './stop-words';
+import packageJson from '../package.json';
 
 interface AppComponentProps {
   acrolinxAnalysisResult: ExtractedTextEvent;
 }
 
-function AppComponent({acrolinxAnalysisResult}: AppComponentProps) {
+function AppComponent({ acrolinxAnalysisResult }: AppComponentProps) {
   if (_.isEmpty(acrolinxAnalysisResult.text)) {
-    return <div className="message">{'Welcome to Word Cloud'}</div>
+    return <div className="message">{'Welcome to Word Cloud'}</div>;
   }
 
   const stopWords = STOPWORDS_BY_LANGUAGE[acrolinxAnalysisResult.languageId] || new Set();
 
   const wordsWithFrequency = _.chain(acrolinxAnalysisResult.text.toLowerCase().split(/\W+/))
-    .filter(word => word.length > 1 && !stopWords.has(word))
+    .filter((word) => word.length > 1 && !stopWords.has(word))
     .countBy()
-    .map((freq, text) => ({text, value: freq}))
+    .map((freq, text) => ({ text, value: freq }))
     .value();
 
   if (_.isEmpty(wordsWithFrequency)) {
-    return <div className="message">{'Your document should contain some non-stop-words.'}</div>
+    return <div className="message">{'Your document should contain some non-stop-words.'}</div>;
   }
 
-  return <ReactWordcloud words={wordsWithFrequency}/>
+  return <ReactWordcloud selectedWordsCloud={[]} words={wordsWithFrequency} />;
 }
 
 function renderApp(extractedTextEvent: ExtractedTextEvent) {
-  ReactDOM.render(
-    <AppComponent acrolinxAnalysisResult={extractedTextEvent}/>, document.getElementById('root')
-  );
+  ReactDOM.render(<AppComponent acrolinxAnalysisResult={extractedTextEvent} />, document.getElementById('root'));
 }
 
 const acrolinxAppApi = initApi({
-  appSignature: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiV29yZENsb3VkIiwiaWQiOiI2NjZmNzc4OS0zNTliLTRlNzMtYjlkMi00YTFmMWNkNDlmNDkiLCJ0eXBlIjoiQVBQIiwiaWF0IjoxNTYxNjQ1NDYyfQ.zQs7rXYkvLVzkMAyhQsHTpr1q1O_F4XPB_N7QfBbasE',
+  appSignature:
+    'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiV29yZENsb3VkIiwiaWQiOiI2NjZmNzc4OS0zNTliLTRlNzMtYjlkMi00YTFmMWNkNDlmNDkiLCJ0eXBlIjoiQVBQIiwiaWF0IjoxNTYxNjQ1NDYyfQ.zQs7rXYkvLVzkMAyhQsHTpr1q1O_F4XPB_N7QfBbasE',
   title: 'WordCloud',
   version: packageJson.version,
 
   button: {
     text: 'Generate Word Cloud',
-    tooltip: 'Generate a word cloud of your document content'
+    tooltip: 'Generate a word cloud of your document content',
   },
 
   requiredEvents: [RequiredEvents.textExtracted],
-  requiredCommands: []
+  requiredCommands: [],
 });
 
 acrolinxAppApi.events.textExtracted.addEventListener(renderApp);
@@ -75,5 +71,5 @@ acrolinxAppApi.events.textExtracted.addEventListener(renderApp);
 const useDummyData = _.includes(window.location.href, 'usedummydata');
 renderApp({
   text: useDummyData ? DUMMY_TEXT : '',
-  languageId: 'en'
+  languageId: 'en',
 });
